@@ -1,0 +1,42 @@
+{
+	// Place your Assembly workspace snippets here. Each snippet is defined under a snippet name and has a scope, prefix, body and 
+	// description. Add comma separated ids of the languages where the snippet is applicable in the scope field. If scope 
+	// is left empty or omitted, the snippet gets applied to all languages. The prefix is what is 
+	// used to trigger the snippet and the body will be expanded and inserted. Possible variables are: 
+	// $1, $2 for tab stops, $0 for the final cursor position, and ${1:label}, ${2:another} for placeholders. 
+	// Placeholders with the same ids are connected.
+	// Example:
+	"150 Standard Template": {
+		"prefix": "asm",
+		"body": [
+			"; This is the standard template for CSCI 150 Lab.",
+			"; Unless otherwise directed, start your programs with this template file.",
+			"; Be sure to rename the file appropriately when used for a lab.",
+			"; Also you can/should remove this comment before use. ",
+			"; Leave the following comments and replace everything between and including",
+			";  the angle brackets with your information.",
+			"",
+			"; who: Raymond Huang, rhuang45",
+			"; what: information",
+			"; why: file.asm",
+			"; when: 00/00/2022 (DD/MM/YYYY)",
+			"",
+			"",
+			"section     .text",
+			"",
+			"global      _start",
+			"",
+			"_start:",
+			"$0",
+			"exit:  ",
+			"\tmov     ebx, 0      ; return 0 status on exit - 'No Errors'",
+			"\tmov     eax, 1      ; invoke SYS_EXIT (kernel opcode 1)",
+			"\tint     80h",
+			"",
+			"section     .bss",
+			"",
+			"section     .data",
+		],
+		"description": "Creates standard asm template for 150"
+	}
+}
