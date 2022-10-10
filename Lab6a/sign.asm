@@ -6,8 +6,8 @@
 ;  the angle brackets with your information.
 
 ; who: Raymond Huang, rhuang45
-; what: Check if data is parity
-; why: parity.asm
+; what: Check if ebx is positive or negative
+; why: sign.asm
 ; when: 09/10/2022 (DD/MM/YYYY)
 
 

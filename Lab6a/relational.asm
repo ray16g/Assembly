@@ -6,9 +6,9 @@
 ;  the angle brackets with your information.
 
 ; who: Raymond Huang, rhuang45
-; what: information
-; why: file.asm
-; when: 00/00/2022 (DD/MM/YYYY)
+; what: Compares ebx and eax and prints relation
+; why: relational.asm
+; when: 09/10/2022 (DD/MM/YYYY)
 
 
 section     .text
