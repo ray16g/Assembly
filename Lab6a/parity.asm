@@ -19,7 +19,8 @@ extern printstr
 
 _start:
     mov al, 00110110b   ; test case
-    dec al
+    cmp al,0
+    
     jp label1           ; jump if even parity
 
     mov eax, oddParity
