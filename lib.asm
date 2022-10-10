@@ -91,7 +91,6 @@ get_input:
 
 ;---------------------------------------------------------------------------
 is_even:
-;
 ; Description: Takes a value and returns 1 if even or 0 if false
 ; Recieves: EAX: the unsigned value to check
 ; Returns: EAX 1 if even, 0 if odd
