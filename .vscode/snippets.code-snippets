@@ -38,5 +38,31 @@
 			"section     .data",
 		],
 		"description": "Creates standard asm template for 150"
-	}
+	},
+
+	"150 Standard Procedure Template": {
+		"prefix": "procedure",
+		"body": [
+			";---------------------------------------------------------------------------",
+			"procedure:",
+			";",
+			"; Description:",
+			"; Recieves:",
+			"; Returns:",
+			"; Requires:",
+			"; Notes:",
+			"; Algo:",
+			";---------------------------------------------------------------------------",
+			"",
+			"\tpush    esi",
+			"\t$0",
+			"\t",
+			"\tpop      esi",
+			"\tret",
+			"\t",
+			"; End procedure-------------------------------------------------------------",
+		],
+		"description": "Creates standard asm procedure for 150"
+	},
+
 }
