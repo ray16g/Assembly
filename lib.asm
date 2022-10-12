@@ -3,6 +3,7 @@ global printstr
 global get_input
 global is_even
 global strlen
+global atoi
 
 global NL
 global NULL
@@ -141,6 +142,53 @@ is_even:
     ret
     
 ; End is_even-------------------------------------------------------------
+
+;---------------------------------------------------------------------------
+atoi:
+;
+; Description: Converts binary string representation to unsigned integer (stops at null terminated string)
+; Recieves: EAX: binary in string
+; Returns:  EAX: binary in integer
+; Requires:
+; Notes:
+; Algo:
+;---------------------------------------------------------------------------
+
+    push    esi
+    push    ebx         
+
+    mov     esi, eax    ; set ESI to the address of the string
+    and     eax,0       ; eax will be binary in unsigned integer
+
+    .while:
+    
+    cmp     byte [esi], NULL    ; checks if current character is null 
+
+    je      .wend       ; ends while loop if end character is null
+
+    ; below 4 lines is eax = eax * 10
+    mov     ebx, ebx    ; ebx = eax
+    shl     eax, 3      ; eax = eax * pow(2,3) 
+    shl     ebx, 1      ; ebx = ebx * 2
+    add     eax, ebx    ; eax = eax + ebx
+    
+    and     ebx, 0      ; set ebx to 0
+    movzx   ebx, BYTE [esi]  ; set ebx to value of character in string
+    sub     ebx , 48
+
+    add     eax, ebx
+
+    inc     esi         ; next character in string
+
+    jmp     .while
+    
+    .wend:
+
+    pop     ebx
+    pop     esi
+    ret
+    
+; End procedure-------------------------------------------------------------
 
 NL:     equ 0xa
 NULL:   equ 0
