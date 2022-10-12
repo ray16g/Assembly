@@ -2,15 +2,54 @@ global sum_array
 global printstr
 global get_input
 global is_even
+global strlen
+
 global NL
 global NULL
 global TRUE
 global FALSE
+
+;---------------------------------------------------------------------------
+strlen:
+;
+; Description: Calculate the size of a null-terminated string
+; Recieves: EAX: address of the string
+; Returns: EAX: the size of the string
+; Requires: The string must be null terminated
+; Notes: None
+; Algo: None
+;---------------------------------------------------------------------------
+
+    push    esi         ; preserve esi
+    
+    mov     esi, eax    ; set ESI to the address of the string
+    and     eax,0       ; eax will be the counter of non-null characters
+
+    .while:
+    
+    cmp     byte [esi], NULL
+
+    je      .wend
+
+    inc     esi
+    inc     eax
+
+    jmp     .while
+    
+
+    .wend:
+
+    pop     esi
+
+    ret
+    
+; End strlen-------------------------------------------------------------
+
 ;---------------------------------------------------------------------------
 sum_array:
 ;
 ; Description: sums the elements in an array
-; Recieves: EAX: arraddress of array
+; Recieves: EAX: address of array
 ;           EBX: number of elements
 ; Returns:  EAX: sum of the elems in the array
 ; Requires: none
@@ -42,22 +81,22 @@ printstr:
 ;
 ; Description: prints string
 ; Recieves: EAX: address of the string
-;           EBX: length of the string
 ; Returns: nothing
 ; Requires: none
 ; Notes: issues a syscall to print the string to console
 ; Algo: none 
 ;---------------------------------------------------------------------------
 
-    push    esi
+    push    eax
 
     mov     ecx, eax        ; string
-    mov     edx, ebx        ; length of string
+    call    strlen
+    mov     edx, eax        ; length of string
     mov     eax, 4          ; stdout
     mov     ebx, 1
     int     0x80            ; int
 
-    pop     esi
+    pop     eax
     ret
 ; End printstr-------------------------------------------------------------
 
@@ -74,8 +113,6 @@ get_input:
 ; Algo: none 
 ;---------------------------------------------------------------------------
 
-    push    esi
-
     mov     ecx, eax        ; buffer
     mov     edx, ebx        ; length of buffer
     mov     eax, 3          ; stdin
@@ -84,7 +121,6 @@ get_input:
 
     ; eax is set to number of chars + newline character
 
-    pop     esi
     ret
 ; End get_input-------------------------------------------------------------
 
@@ -99,12 +135,9 @@ is_even:
 ; Algo: Flips the bits and returns the first bit (1 is even, 0 is odd) 
 ;---------------------------------------------------------------------------
 
-    push    esi
-
     not     eax
     and     eax, 1
 
-    pop     esi
     ret
     
 ; End is_even-------------------------------------------------------------
