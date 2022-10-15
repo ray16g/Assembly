@@ -4,6 +4,8 @@ global get_input
 global is_even
 global strlen
 global atoi
+global srand
+global rand
 
 global NL
 global NULL
@@ -191,7 +193,78 @@ atoi:
     
 ; End procedure-------------------------------------------------------------
 
+;---------------------------------------------------------------------------
+srand:
+;
+; Description: sets the seed for rand procedure
+; Recieves: EAX = seed
+; Returns: none
+; Requires: none
+; Notes: none
+; Algo: none
+;---------------------------------------------------------------------------
+
+    mov [next], eax
+
+    ret
+    
+; End srand-------------------------------------------------------------
+
+;---------------------------------------------------------------------------
+rand:
+;
+; Description: sets a random value based on seed into eax
+; Recieves: none
+; Returns: eax as random value
+; Requires: none 
+; Notes: none
+; Algo: none
+;---------------------------------------------------------------------------
+
+    push    edx         ; preserve edx
+    push    ebx         ; preserve ebx
+
+    mov     eax, [next] ; eax = next
+
+    mov     ebx, ran1
+    mul     ebx         ; eax = eax * 1103515245 
+
+    mov     ebx, ran2
+    add     eax, ebx    ; eax = eax + 12345
+
+    mov     [next], eax ; next = eax
+
+    mov     ebx, ran3
+
+    xor     edx, edx    ; 0 edx
+    div     ebx         ; eax = eax / 65536 
+
+    mov     ebx, ran4
+
+    xor     edx, edx    ; 0 edx
+    div     ebx         ; edx = eax % 32768 (eax is set to eax / 32768)
+
+    mov     eax, edx    ; eax = edx 
+    ; return eax
+
+    pop     ebx         ; preserve ebx
+    pop     edx         ; preserve edx
+
+    ret
+    
+; End procedure-------------------------------------------------------------
+
+
 NL:     equ 0xa
 NULL:   equ 0
 TRUE:   equ 1
 FALSE:  equ 0
+
+section .bss
+next: resd 1
+
+section .data
+ran1: equ 1103515245 
+ran2: equ 12345
+ran3: equ 65536
+ran4: equ 32768
