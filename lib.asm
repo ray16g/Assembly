@@ -167,16 +167,17 @@ atoi:
     je      .wend       ; ends while loop if end character is null
 
     ; below 4 lines is eax = eax * 10
-    mov     ebx, ebx    ; ebx = eax
+    mov     ebx, eax    ; ebx = eax
     shl     eax, 3      ; eax = eax * pow(2,3) 
     shl     ebx, 1      ; ebx = ebx * 2
     add     eax, ebx    ; eax = eax + ebx
     
     and     ebx, 0      ; set ebx to 0
+    
     movzx   ebx, BYTE [esi]  ; set ebx to value of character in string
-    sub     ebx , 48
+    sub     ebx , 48    ; ebx = ebx - 48
 
-    add     eax, ebx
+    add     eax, ebx    ; eax = eax - ebx 
 
     inc     esi         ; next character in string
 
