@@ -150,12 +150,12 @@ is_even:
 ;---------------------------------------------------------------------------
 atoi:
 ;
-; Description: Converts integer represented in string to unsigned integer (stops at null terminated string)
-; Recieves: EAX: binary in string
-; Returns:  EAX: binary in integer
+; Description: Converts ascii representation of a unsigned integer to an integer
+; Recieves: EAX = ascii representation of a unsigned integer
+; Returns:  EAX = integer
 ; Requires: only integer represented characters in string
-; Notes:
-; Algo:
+; Notes: none
+; Algo: horner's method
 ;---------------------------------------------------------------------------
 
     push    esi
@@ -165,26 +165,18 @@ atoi:
     and     eax,0       ; eax will be binary in unsigned integer
 
     .while:
-    
     cmp     byte [esi], NULL    ; checks if current character is null 
-
     je      .wend       ; ends while loop if end character is null
 
-    ; below 4 lines is eax = eax * 10
-    mov     ebx, eax    ; ebx = eax
-    shl     eax, 3      ; eax = eax * pow(2,3) 
-    shl     ebx, 1      ; ebx = ebx * 2
-    add     eax, ebx    ; eax = eax + ebx
-    
+    mov     ebx, 10
+    mul     ebx         ; eax = eax * 10
+
     and     ebx, 0      ; set ebx to 0
-    
     movzx   ebx, BYTE [esi]  ; set ebx to value of character in string
     sub     ebx , 48    ; ebx = ebx - 48
-
     add     eax, ebx    ; eax = eax - ebx 
 
     inc     esi         ; next character in string
-
     jmp     .while
     
     .wend:
