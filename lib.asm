@@ -6,11 +6,13 @@ global strlen
 global atoi
 global srand
 global rand
+global current_time
 
 global NL
 global NULL
 global TRUE
 global FALSE
+global RAND_MAX
 
 ;---------------------------------------------------------------------------
 strlen:
@@ -148,10 +150,10 @@ is_even:
 ;---------------------------------------------------------------------------
 atoi:
 ;
-; Description: Converts binary string representation to unsigned integer (stops at null terminated string)
+; Description: Converts integer represented in string to unsigned integer (stops at null terminated string)
 ; Recieves: EAX: binary in string
 ; Returns:  EAX: binary in integer
-; Requires:
+; Requires: only integer represented characters in string
 ; Notes:
 ; Algo:
 ;---------------------------------------------------------------------------
@@ -196,7 +198,7 @@ atoi:
 ;---------------------------------------------------------------------------
 srand:
 ;
-; Description: sets the seed for rand procedure
+; Description: Seeds the value used by rand
 ; Recieves: EAX = seed
 ; Returns: none
 ; Requires: none
@@ -213,7 +215,7 @@ srand:
 ;---------------------------------------------------------------------------
 rand:
 ;
-; Description: sets a random value based on seed into eax
+; Description: generates a random unsigned integer value using seed
 ; Recieves: none
 ; Returns: eax as random value
 ; Requires: none 
@@ -224,26 +226,20 @@ rand:
     push    edx         ; preserve edx
     push    ebx         ; preserve ebx
 
+    ; next = next * 1103515245 + 12345
     mov     eax, [next] ; eax = next
-
-    mov     ebx, ran1
+    mov     ebx, RAND1
     mul     ebx         ; eax = eax * 1103515245 
-
-    mov     ebx, ran2
-    add     eax, ebx    ; eax = eax + 12345
-
+    add     eax, RAND2  ; eax = eax + 12345
     mov     [next], eax ; next = eax
 
-    mov     ebx, ran3
-
+    ; return next/65536 % 32768
+    mov     ebx, RAND3
     xor     edx, edx    ; 0 edx
     div     ebx         ; eax = eax / 65536 
-
-    mov     ebx, ran4
-
+    mov     ebx, RAND4
     xor     edx, edx    ; 0 edx
     div     ebx         ; edx = eax % 32768 (eax is set to eax / 32768)
-
     mov     eax, edx    ; eax = edx 
     ; return eax
 
@@ -254,6 +250,29 @@ rand:
     
 ; End procedure-------------------------------------------------------------
 
+;---------------------------------------------------------------------------
+current_time:
+;
+; Description: Get and return the current time in seconds since Unix Epoch (Jan 1, 1979)
+; Recieves: none
+; Returns: EAX = integer value for time in escs since the Unix EPOCH
+; Requires: none
+; Notes: none
+; Algo: none
+;---------------------------------------------------------------------------
+
+    push    ebx         ; preserve
+
+    mov     eax, 13     ; syscall number for time
+    mov     ebx, 0      ; time location = NULL 
+    int     0x80        ; 32 bit time value returned in eax
+
+    pop     ebx         ; restore
+
+    ret
+    
+; End srand-------------------------------------------------------------
+
 
 NL:     equ 0xa
 NULL:   equ 0
@@ -261,10 +280,11 @@ TRUE:   equ 1
 FALSE:  equ 0
 
 section .bss
-next: resd 1
 
 section .data
-ran1: equ 1103515245 
-ran2: equ 12345
-ran3: equ 65536
-ran4: equ 32768
+next: dd 1
+RAND1: equ 1103515245 
+RAND2: equ 12345
+RAND3: equ 65536
+RAND4: equ 32768
+RAND_MAX: RAND4-1
