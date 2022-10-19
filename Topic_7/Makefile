@@ -16,7 +16,7 @@ $(BIN) : $(OBJ) $(INC_OBJ)
 $(OBJ) : $(SRC)
 	$(ASM) $(ASM_FLAGS) $(SRC)
 
-$(INC_OBJ) $(INC)
+$(INC_OBJ) : $(INC)
 	$(ASM) $(ASM_FLAGS) $(INC) 
 
 clean: 
