@@ -8,7 +8,7 @@
 ; who: Raymond Huang, rhuang45
 ; what: information
 ; why: file.asm
-; when: 00/00/2022 (DD/MM/YYYY)
+; when: 19/10/2022 (DD/MM/YYYY)
 
 
 section     .text
@@ -16,10 +16,18 @@ section     .text
 global      _start
 
 extern      atoi
+extern      get_input
+extern      printstr
 
 _start:
+    mov     eax, prompt
+    call    printstr
 
-    mov eax, string
+    mov     eax, buffer
+    mov     ebx, buffersz
+    call    get_input
+
+    mov     eax, buffer
     call    atoi
 
 exit:  
@@ -28,7 +36,10 @@ exit:
     int     80h
 
 section     .bss
+buffersz    equ 100
+buffer:     resb buffersz
 
 section     .data
 
-string: db  "10001010101", 0
+string:     db  "1024", 0
+prompt:     db  "Enter integer: ",0

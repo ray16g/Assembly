@@ -188,6 +188,31 @@ atoi:
 ; End procedure-------------------------------------------------------------
 
 ;---------------------------------------------------------------------------
+itoa:
+;
+; Description: converts an unsigned integer to a null-terminated string representation
+; Recieves: EAX = unsigned integer value
+;           EBX = address of string buffer
+;           ECX = size of buffer
+; Returns: nothing
+; Requires: nothing
+; Notes: none
+; Algo: none
+;---------------------------------------------------------------------------
+
+    push    edp
+    mov     edp, esp
+
+    ; code here
+
+    pop     edp
+    ret
+
+; End itoa-------------------------------------------------------------
+
+
+
+;---------------------------------------------------------------------------
 srand:
 ;
 ; Description: Seeds the value used by rand
