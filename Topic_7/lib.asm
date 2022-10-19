@@ -200,12 +200,46 @@ itoa:
 ; Algo: none
 ;---------------------------------------------------------------------------
 
-    push    edp
-    mov     edp, esp
+    push    ebp                 ; preserve caller's base pointer
+    push    edi                 
+    mov     ebp, esp            ; set base of frame
 
-    ; code here
+    sub     esp, 8              ; allocate counter var
+    mov     dword [ebp - 4], 0  ; intializing counter to 0 
+    mov     dword [ebp - 8], 10 ; divisor 
 
-    pop     edp
+    mov     edi, ebx
+
+    ; loop eax (until eax == 0)
+    ; div by 10
+    ; use remainder + 48 as the character 
+    .while:
+    test    eax, eax 
+    jz      .wend
+    mov     edx, 0
+    div     dword [ebp - 8]
+
+    add     edx, 48
+    push    edx
+    inc     dword [ebp - 4]
+    jmp     .while
+
+    .wend:
+
+    mov     ecx, [ebp - 4]
+
+    .loop:
+    pop     eax
+    mov     [edi], al
+    inc     edi
+    loop    .loop
+    
+
+    mov     [edi], 0
+
+    mov     esp, ebp
+    pop     edi
+    pop     ebp                 ; restore caller's base pointer
     ret
 
 ; End itoa-------------------------------------------------------------
