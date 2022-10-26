@@ -7,6 +7,7 @@ global atoi
 global srand
 global rand
 global current_time
+global swap
 
 global NL
 global NULL
@@ -323,6 +324,25 @@ current_time:
     ret
     
 ; End srand-------------------------------------------------------------
+
+;---------------------------------------------------------------------------
+swap:
+;
+; Description: Swap 2 values
+; Recieves: none
+; Returns: EAX and EBX = values to swap
+; Requires: none
+; Notes: none
+; Algo: none
+;---------------------------------------------------------------------------
+
+    mov     ecx, [eax]      ; move val1
+    xchg    ecx, [ebx]      ; exchange val1 and val2
+    mov     [eax], ecx      ; update val1 memory location
+
+    ret
+    
+; End swap-------------------------------------------------------------
 
 
 NL:     equ 0xa
