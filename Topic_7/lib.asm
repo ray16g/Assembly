@@ -8,6 +8,7 @@ global srand
 global rand
 global current_time
 global swap
+global swap_xor
 
 global NL
 global NULL
@@ -236,7 +237,7 @@ itoa:
     loop    .loop
     
 
-    mov     [edi], 0
+    mov     dword [edi], 0
 
     mov     esp, ebp
     pop     edi
@@ -330,15 +331,69 @@ swap:
 ;
 ; Description: Swap 2 values
 ; Recieves: none
-; Returns: EAX and EBX = values to swap
+; Returns:  param1: address of the first value (val1)
+;           param2: address of the second value (val2)
 ; Requires: none
 ; Notes: none
 ; Algo: none
 ;---------------------------------------------------------------------------
+    push    ebp             ; setup activaiton record
+    mov     ebp, esp        
 
-    mov     ecx, [eax]      ; move val1
-    xchg    ecx, [ebx]      ; exchange val1 and val2
-    mov     [eax], ecx      ; update val1 memory location
+    mov     ecx, [ebp + 8]      ; load ecx with address of val 1
+    mov     ecx, [ecx]          ; load ecx with val1
+    mov     edx, [ebp + 12]     ; load edx with address of val2
+    mov     edx, [edx]          ; load edx with val 2
+
+    xchg    ecx, edx            ; exchange val1 and val2
+    
+    mov     ebx, [ebp + 8]      ; load ebx with address of val1
+    mov     [ebx], ecx          ; update val1 memoery location
+    mov     ebx, [ebp + 12]     ; load ebx with address of val2
+    mov     [ebx], edx          ; update val2 memory locaiton 
+
+    mov     esp, ebp        ; deallocate local storage
+    pop     ebp             ; restore callers base pointer
+
+    ret
+    
+; End swap-------------------------------------------------------------
+
+;---------------------------------------------------------------------------
+swap_xor:
+;
+; Description: Swap 2 values with xor
+; Recieves: none
+; Returns:  param1: address of the first value (val1)
+;           param2: address of the second value (val2)
+; Requires: none
+; Notes: none
+; Algo: none
+;---------------------------------------------------------------------------
+    push    ebp             ; setup activaiton record
+    mov     ebp, esp        
+    
+    mov     ecx, [ebp + 8]      ; load ecx with address of val 1
+    mov     ecx, [ecx]          ; load ecx with val1
+    mov     edx, [ebp + 12]     ; load edx with address of val2
+    mov     edx, [edx]          ; load edx with val 2
+
+    cmp     ecx, edx
+    jz      end
+
+    xor     ecx, edx
+    xor     edx, ecx
+    xor     ecx, edx
+    
+    mov     ebx, [ebp + 8]      ; load ebx with address of val1
+    mov     [ebx], ecx          ; update val1 memoery location
+    mov     ebx, [ebp + 12]     ; load ebx with address of val2
+    mov     [ebx], edx          ; update val2 memory locaiton 
+
+    end:
+
+    mov     esp, ebp        ; deallocate local storage
+    pop     ebp             ; restore callers base pointer
 
     ret
     

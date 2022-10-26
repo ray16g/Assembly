@@ -11,6 +11,7 @@
 ; when: < the due date of this lab.>
 
 extern      swap
+extern      swap_xor
 
 section     .text
 
@@ -20,13 +21,11 @@ _start:
 
     mov     eax, array
     mov     ebx, elem_qty
-    call    print_unit_array
 
     call    array_swap
 
     mov     eax, array
     mov     ebx, elem_qty
-    call    print_unit_array
 
 exit:  
     mov     ebx, 0      ; return 0 status on exit - 'No Errors'
@@ -46,9 +45,12 @@ section     .text
 
 array_swap:
 
+    push    ebp
+    mov     ebp, esp 
+
     push    ebx                         ; preserve ebx
-    push    edi                         ; preserve esi
-    push    esi                         ; preserve edi
+    push    edi                         ; preserve edi
+    push    esi                         ; preserve esi
 
     mov     esi, array                  ; esi = front iterator
     lea     edi, [array+array_sz-4]     ; edi = back iterator
@@ -57,9 +59,12 @@ array_swap:
     cmp     esi, edi                    ; check esi < edi
     jae     .wend                       ; if false, exit loop
 
-    mov     eax, esi                    ; move front iterator into eax
-    mov     ebx, edi                    ; move back iterator into ebx
-    call    swap                        ; swap values at those iterators
+
+    push    edi                         ; push second param
+    push    esi                         ; push first param
+    call    swap_xor                        ; swap values at those iterators
+    add     esp, 8                      ; deallocate two parameters
+
     add     esi, 4                      ; increment front iterator
     sub     edi, 4                      ; decrement back iterator 
     jmp     .while                      ; next set of iterators
@@ -69,4 +74,7 @@ array_swap:
     pop     edi                         ; restore edi
     pop     ebx                         ; restore ebx 
     
+    mov     esp, ebp 
+    pop     ebp
+
     ret
