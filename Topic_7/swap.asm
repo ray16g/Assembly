@@ -22,7 +22,7 @@ _start:
     mov     eax, array
     mov     ebx, elem_qty
 
-    call    array_swap
+    call    swap
 
     mov     eax, array
     mov     ebx, elem_qty

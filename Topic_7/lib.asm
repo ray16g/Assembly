@@ -339,11 +339,14 @@ swap:
 ;---------------------------------------------------------------------------
     push    ebp             ; setup activaiton record
     mov     ebp, esp        
+    sub     esp, 4
 
     mov     ecx, [ebp + 8]      ; load ecx with address of val 1
     mov     ecx, [ecx]          ; load ecx with val1
     mov     edx, [ebp + 12]     ; load edx with address of val2
     mov     edx, [edx]          ; load edx with val 2
+
+    mov     dword [ebp - 4], edx
 
     xchg    ecx, edx            ; exchange val1 and val2
     
