@@ -1,3 +1,4 @@
+global sum
 
 ;---------------------------------------------------------------------------
 sum:
@@ -10,14 +11,14 @@ sum:
     push    ebp                 ; preserve caller's base pointer
     mov     ebp, esp            ; set base of frame
 
-    mov     eax, [ebp + 8]
-    cmp     eax, 1
-    jle     .base
+    mov     eax, [ebp + 8]      ; move n into eax
+    cmp     eax, 1              ; if n <= 1; base case
+    jle     .base               
 
-    dec     eax
-    push    eax
-    call    sum
-    add     eax, [ebp + 8]
+    dec     eax                 ; dec n for recursive call
+    push    eax                 ; push eax
+    call    sum                 ; recursive call
+    add     eax, [ebp + 8]      ; n + sum(n-1)
 
     .base:
     leave
