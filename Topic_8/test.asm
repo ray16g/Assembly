@@ -5,20 +5,47 @@
 ; Leave the following comments and replace everything between and including
 ;  the angle brackets with your information.
 
-; who: <your name and Mt SAC username goes here>
-; what: <the function of this program>
-; why: <the name of the lab>
-; when: < the due date of this lab.>
+; who: Raymond Huang, rhuang45
+; what: Tests the factorial lib function
+; why: Lab 8a
+; when: 2/11/2022 (DD MM YYYY)
 
 section     .text
 
-extern      sum
+extern      factorial
+extern      itoa
+extern      atoi
+extern      printstr
+extern      get_input
 
 global      _start
 
 _start:
 
+    mov     eax, prompt
+    call    printstr
+    mov     eax, buffer
+    mov     ebx, buffersz
+    call    get_input
 
+    mov     eax, buffer
+
+    call    atoi
+    test:
+    push    eax
+    call    factorial
+
+    mov     ebx, buffer
+    mov     ecx, buffersz
+
+    call    itoa
+
+    mov     eax, output
+    call    printstr
+    mov     eax, buffer
+    call    printstr
+    mov     eax, newline
+    call    printstr
 
 exit:  
     mov     ebx, 0      ; return 0 status on exit - 'No Errors'
@@ -26,6 +53,10 @@ exit:
     int     80h
 
 section     .bss
+buffer: resb 255
 
 section     .data
-
+prompt: db "Input number to factorial: ",0
+output: db "The factorial is ",0
+newline: db 0xa,0
+buffersz: equ 255
