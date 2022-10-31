@@ -348,7 +348,8 @@ swap:
 
     mov     dword [ebp - 4], edx
 
-    xchg    ecx, edx            ; exchange val1 and val2
+    mov     edx, ecx
+    mov     ecx, dword [ebp - 4]
     
     mov     ebx, [ebp + 8]      ; load ebx with address of val1
     mov     [ebx], ecx          ; update val1 memoery location

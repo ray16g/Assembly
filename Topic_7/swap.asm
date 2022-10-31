@@ -22,7 +22,7 @@ _start:
     mov     eax, array
     mov     ebx, elem_qty
 
-    call    swap
+    call    array_swap
 
     mov     eax, array
     mov     ebx, elem_qty
@@ -62,7 +62,7 @@ array_swap:
 
     push    edi                         ; push second param
     push    esi                         ; push first param
-    call    swap_xor                        ; swap values at those iterators
+    call    swap                        ; swap values at those iterators
     add     esp, 8                      ; deallocate two parameters
 
     add     esi, 4                      ; increment front iterator
