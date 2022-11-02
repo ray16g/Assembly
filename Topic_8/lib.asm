@@ -23,33 +23,32 @@ global RAND_MAX
 strlen:
 ;
 ; Description: Calculate the size of a null-terminated string
-; Recieves: EAX: address of the string
+; Recieves: address of the stirng on stack (arg1)
 ; Returns: EAX: the size of the string
 ; Requires: The string must be null terminated
 ; Notes: None
 ; Algo: None
 ;---------------------------------------------------------------------------
 
-    push    esi         ; preserve esi
-    
-    mov     esi, eax    ; set ESI to the address of the string
-    and     eax,0       ; eax will be the counter of non-null characters
+    push    ebp
+    mov     ebp, esp
+
+    push    esi             ; preserve esi
+    mov     esi, [ebp + 8]  ; set ESI to the address of the string
+    and     eax,0           ; eax will be the counter of non-null characters
 
     .while:
     
     cmp     byte [esi], NULL
-
     je      .wend
-
     inc     esi
     inc     eax
-
     jmp     .while
-    
-
     .wend:
 
     pop     esi
+
+    leave
 
     ret
     
@@ -59,18 +58,21 @@ strlen:
 sum_array:
 ;
 ; Description: sums the elements in an array
-; Recieves: EAX: address of array
-;           EBX: number of elements
+; Recieves: ARG1: address of array
+;           ARG2: number of elements
 ; Returns:  EAX: sum of the elems in the array
 ; Requires: none
 ; Notes: none
 ; Algo: none 
 ;---------------------------------------------------------------------------
 
+    push    ebp
+    mov     ebp, esp
+
     push    esi
 
-    mov     esi, eax        ; store array address in esi
-    mov     ecx, ebx        ; mov length of array to counter
+    mov     esi, [ebp + 8]        ; store array address in esi
+    mov     ecx, [ebp + 12]        ; mov length of array to counter
     xor     eax, eax        ; set eax to 0
 
     .loop1:
@@ -81,6 +83,9 @@ sum_array:
     loop    .loop1          ; loop
 
     pop      esi
+
+    leave
+
     ret
     
 ; End sum_array-------------------------------------------------------------
@@ -90,23 +95,30 @@ sum_array:
 printstr:
 ;
 ; Description: prints string
-; Recieves: EAX: address of the string
+; Recieves: ARG1: address of the string
 ; Returns: nothing
 ; Requires: none
 ; Notes: issues a syscall to print the string to console
 ; Algo: none 
 ;---------------------------------------------------------------------------
+    push    ebp
+    mov     ebp, esp
 
     push    eax
 
-    mov     ecx, eax        ; string
+    mov     ecx, [ebp + 8]        ; string
+    push    ecx
     call    strlen
+    add     esp, 4
     mov     edx, eax        ; length of string
     mov     eax, 4          ; stdout
     mov     ebx, 1
     int     0x80            ; int
 
     pop     eax
+
+    leave
+
     ret
 ; End printstr-------------------------------------------------------------
 
@@ -115,20 +127,23 @@ printstr:
 get_input:
 ;
 ; Description: takes input
-; Recieves: EAX: address of the buffer
-;           EBX: buffer size
+; Recieves: ARG1: address of the buffer
+;           ARG2: buffer size
 ; Returns: EAX as number of chars
 ; Requires: none
 ; Notes: issues a syscall to take in input
 ; Algo: none 
 ;---------------------------------------------------------------------------
 
+    push    ebp
+    mov     ebp, esp
+
     push    ebx 
     push    esi
 
-    mov     esi, eax
-    mov     ecx, eax        ; buffer
-    mov     edx, ebx        ; length of buffer
+    mov     esi, [ebp + 8]
+    mov     ecx, [ebp + 8]        ; buffer
+    mov     edx, [ebp + 12]        ; length of buffer
     mov     eax, 3          ; stdin
     mov     ebx, 0
     int     0x80            ; int
@@ -143,6 +158,9 @@ get_input:
     .endif: 
     pop     esi
     pop     ebx
+
+    leave
+
     ret
 ; End get_input-------------------------------------------------------------
 
@@ -150,15 +168,21 @@ get_input:
 ;---------------------------------------------------------------------------
 is_even:
 ; Description: Takes a value and returns 1 if even or 0 if false
-; Recieves: EAX: the unsigned value to check
+; Recieves: ARG1: the unsigned value to check
 ; Returns: EAX 1 if even, 0 if odd
 ; Requires: none
 ; Notes: none
 ; Algo: Flips the bits and returns the first bit (1 is even, 0 is odd) 
 ;---------------------------------------------------------------------------
 
+    push    ebp
+    mov     ebp, esp
+
+    mov     eax, [ebp + 8]
     not     eax
     and     eax, 1
+
+    leave
 
     ret
     
@@ -168,18 +192,21 @@ is_even:
 atoi:
 ;
 ; Description: Converts ascii representation of a unsigned integer to an integer
-; Recieves: EAX = ascii representation of a unsigned integer
-; Returns:  EAX = integer
+; Recieves: ARG1 = ascii representation of a unsigned integer
+; Returns:  ARG2 = integer
 ; Requires: only integer represented characters in string
 ; Notes: none
 ; Algo: horner's method
 ;---------------------------------------------------------------------------
 
+    push    ebp
+    mov     ebp, esp
+
     push    esi
     push    ebx         
 
-    mov     esi, eax    ; set ESI to the address of the string
-    and     eax,0       ; eax will be binary in unsigned integer
+    mov     esi, [ebp + 8]    ; set ESI to the address of the string
+    and     eax,0             ; eax will be binary in unsigned integer
 
     .while:
     cmp     byte [esi], NULL    ; checks if current character is null 
@@ -200,6 +227,9 @@ atoi:
 
     pop     ebx
     pop     esi
+
+    leave
+
     ret
     
 ; End procedure-------------------------------------------------------------
@@ -208,30 +238,32 @@ atoi:
 itoa:
 ;
 ; Description: converts an unsigned integer to a null-terminated string representation
-; Recieves: EAX = unsigned integer value
-;           EBX = address of string buffer
-;           ECX = size of buffer
+; Recieves: ARG1 = unsigned integer value
+;           ARG2 = address of string buffer
+;           ARG3 = size of buffer
 ; Returns: nothing
 ; Requires: nothing
 ; Notes: none
 ; Algo: none
 ;---------------------------------------------------------------------------
 
-    push    ebp                 ; preserve caller's base pointer
-    push    edi                 
+    push    ebp                 ; preserve caller's base pointer   
     mov     ebp, esp            ; set base of frame
+
+    push    edi
 
     sub     esp, 8              ; allocate counter var
     mov     dword [ebp - 4], 0  ; intializing counter to 0 
     mov     dword [ebp - 8], 10 ; divisor 
 
-    mov     edi, ebx
+    mov     edi, [ebp + 12]
+    mov     eax, [ebp + 8]
 
     ; loop eax (until eax == 0)
     ; div by 10
     ; use remainder + 48 as the character 
     .while:
-    test    eax, eax 
+    test    eax, eax
     jz      .wend
     mov     edx, 0
     div     dword [ebp - 8]
@@ -254,9 +286,10 @@ itoa:
 
     mov     dword [edi], 0
 
-    mov     esp, ebp
     pop     edi
-    pop     ebp                 ; restore caller's base pointer
+
+    leave
+
     ret
 
 ; End itoa-------------------------------------------------------------
@@ -267,14 +300,23 @@ itoa:
 srand:
 ;
 ; Description: Seeds the value used by rand
-; Recieves: EAX = seed
+; Recieves: ARG1 = seed
 ; Returns: none
 ; Requires: none
 ; Notes: none
 ; Algo: none
 ;---------------------------------------------------------------------------
 
-    mov [next], eax
+    push    ebp
+    mov     ebp, esp
+
+    push    eax
+    mov     eax, dword [ebp + 8]
+
+    mov     [next], eax
+
+    pop     eax
+    leave
 
     ret
     
@@ -345,9 +387,9 @@ current_time:
 swap:
 ;
 ; Description: Swap 2 values
-; Recieves: none
-; Returns:  param1: address of the first value (val1)
+; Recieves:  param1: address of the first value (val1)
 ;           param2: address of the second value (val2)
+; Returns: none
 ; Requires: none
 ; Notes: none
 ; Algo: none
@@ -448,9 +490,9 @@ sum:
 ;---------------------------------------------------------------------------
 factorial:
 ;
-; Description: Get and return the current time in seconds since Unix Epoch (Jan 1, 1979)
-; Recieves: none
-; Returns: EAX = integer value for time in escs since the Unix EPOCH
+; Description: calculates factorial of unsigned integer
+; Recieves: recieve on stack the value of n
+; Returns: the factorial on eax
 ; Requires: none
 ; Notes: none
 ; Algo: none
