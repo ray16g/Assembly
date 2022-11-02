@@ -49,8 +49,7 @@ _start:
     call    printstr
     add     esp, 4
 
-    push    newline
-    call    printstr
+    call    print_newline
     add     esp, 4
 
 exit:  

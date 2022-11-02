@@ -1,0 +1,22 @@
+extern sum_array
+extern printstr
+extern get_input
+extern is_even
+extern strlen
+extern atoi
+extern itoa
+extern srand
+extern rand
+extern current_time
+extern swap
+extern swap_xor
+extern sum
+extern factorial
+extern print_newline
+
+; constants
+extern NL
+extern NULL
+extern TRUE
+extern FALSE
+extern RAND_MAX

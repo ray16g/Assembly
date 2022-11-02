@@ -12,6 +12,7 @@ global swap
 global swap_xor
 global sum
 global factorial
+global print_newline
 
 global NL
 global NULL
@@ -116,6 +117,28 @@ printstr:
     int     0x80            ; int
 
     pop     eax
+
+    leave
+
+    ret
+; End printstr-------------------------------------------------------------
+
+;---------------------------------------------------------------------------
+print_newline:
+;
+; Description: prints newline
+; Recieves: nothing
+; Returns: nothing
+; Requires: none
+; Notes: issues a syscall to print the string to console
+; Algo: none 
+;---------------------------------------------------------------------------
+    push    ebp
+    mov     ebp, esp
+
+    push    newlinestr
+    call    printstr
+    add     esp, 4
 
     leave
 
@@ -485,7 +508,7 @@ sum:
 
     ret
     
-; End srand-------------------------------------------------------------
+; End sum-------------------------------------------------------------
 
 ;---------------------------------------------------------------------------
 factorial:
@@ -516,7 +539,7 @@ factorial:
 
     ret
     
-; End srand-------------------------------------------------------------
+; End factorial-------------------------------------------------------------
 
 NL:     equ 0xa
 NULL:   equ 0
@@ -526,6 +549,7 @@ FALSE:  equ 0
 section .bss
 
 section .data
+newlinestr:     db   0x0a,0
 next: dd 1
 RAND1: equ 1103515245 
 RAND2: equ 12345
