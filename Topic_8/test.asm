@@ -29,9 +29,8 @@ _start:
     call    get_input
 
     mov     eax, buffer
-
     call    atoi
-    test:
+
     push    eax
     call    factorial
 
@@ -53,10 +52,10 @@ exit:
     int     80h
 
 section     .bss
-buffer: resb 255
+buffersz: equ 255
+buffer: resb buffersz
 
 section     .data
 prompt: db "Input number to factorial: ",0
 output: db "The factorial is ",0
 newline: db 0xa,0
-buffersz: equ 255

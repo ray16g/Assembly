@@ -10,6 +10,7 @@ global rand
 global current_time
 global swap
 global swap_xor
+global sum
 global factorial
 
 global NL
@@ -122,6 +123,10 @@ get_input:
 ; Algo: none 
 ;---------------------------------------------------------------------------
 
+    push    ebx 
+    push    esi
+
+    mov     esi, eax
     mov     ecx, eax        ; buffer
     mov     edx, ebx        ; length of buffer
     mov     eax, 3          ; stdin
@@ -129,7 +134,15 @@ get_input:
     int     0x80            ; int
 
     ; eax is set to number of chars + newline character
+    cmp     byte [esi + eax - 1], NL
 
+    jnz     .endif
+    .if: 
+    mov     byte [esi + eax - 1], NULL
+    dec     eax
+    .endif: 
+    pop     esi
+    pop     ebx
     ret
 ; End get_input-------------------------------------------------------------
 
@@ -404,6 +417,33 @@ swap_xor:
     ret
     
 ; End swap-------------------------------------------------------------
+
+;---------------------------------------------------------------------------
+sum:
+;
+; Description: Sum first n counting numbers
+; Recieves: stack arg = n
+; Returns: EAX = sum
+;---------------------------------------------------------------------------
+
+    push    ebp                 ; preserve caller's base pointer
+    mov     ebp, esp            ; set base of frame
+
+    mov     eax, [ebp + 8]      ; move n into eax
+    cmp     eax, 1              ; if n <= 1; base case
+    jle     .base               
+
+    dec     eax                 ; dec n for recursive call
+    push    eax                 ; push eax
+    call    sum                 ; recursive call
+    add     eax, [ebp + 8]      ; n + sum(n-1)
+
+    .base:
+    leave
+
+    ret
+    
+; End srand-------------------------------------------------------------
 
 ;---------------------------------------------------------------------------
 factorial:
