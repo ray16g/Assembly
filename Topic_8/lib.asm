@@ -13,6 +13,7 @@ global swap_xor
 global sum
 global factorial
 global print_newline
+global copy_int_array
 
 global NL
 global NULL
@@ -540,6 +541,40 @@ factorial:
     ret
     
 ; End factorial-------------------------------------------------------------
+
+;---------------------------------------------------------------------------
+copy_int_array:
+;
+; Description: copy array of double words from one buffer to another
+; Recieves: arg1 src array
+;           arg2 dest array
+;           arg3 size of source array (size in elements)
+; Returns: the factorial on eax
+; Requires: none
+; Notes: dst buffer is expected to be the correct size
+; Algo: none
+;---------------------------------------------------------------------------
+
+ 
+    push    ebp                 ; preserve caller's base pointer
+    mov     ebp, esp            ; set base of frame
+    push    esi
+    push    edi
+
+    mov     esi, [ebp + 8]
+    mov     edi, [ebp + 12]
+    mov     ecx, [ebp + 16]
+
+    cld
+
+    rep     movsd
+
+    pop     edi
+    pop     esi
+    leave
+    ret
+    
+; End copy_int_array-------------------------------------------------------------
 
 NL:     equ 0xa
 NULL:   equ 0
