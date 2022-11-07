@@ -14,6 +14,8 @@ global sum
 global factorial
 global print_newline
 global copy_int_array
+global strcopy
+global to_lower
 
 global NL
 global NULL
@@ -35,20 +37,17 @@ strlen:
     push    ebp
     mov     ebp, esp
 
-    push    esi             ; preserve esi
-    mov     esi, [ebp + 8]  ; set ESI to the address of the string
-    and     eax,0           ; eax will be the counter of non-null characters
+    push    edi             ; preserve esi
+    mov     edi, [ebp + 8]  ; set ESI to the address of the string
+    mov     al, 0           ; compare to 0
+    mov     ecx, 256        ; counter of 255
+    cld                     ; set direction flag
 
-    .while:
-    
-    cmp     byte [esi], NULL
-    je      .wend
-    inc     esi
-    inc     eax
-    jmp     .while
-    .wend:
+    repne   scasb           ; repeat until find null character
+    mov     eax, 256        ; len = 256 - ecx
+    sub     eax, ecx
 
-    pop     esi
+    pop     edi
 
     leave
 
@@ -575,6 +574,93 @@ copy_int_array:
     ret
     
 ; End copy_int_array-------------------------------------------------------------
+
+;---------------------------------------------------------------------------
+strcopy:
+;
+; Description: Calculate the size of a null-terminated string
+; Recieves: arg1: address of source string
+;           arg2: address of destiniation string
+; Returns: nothing
+; Requires: The string must be null terminated
+; Notes: None
+; Algo: None
+;---------------------------------------------------------------------------
+
+    push    ebp
+    mov     ebp, esp
+    push    eax
+    push    ecx
+    push    esi
+    push    edi
+
+    push    dword [ebp + 8]
+    call    strlen
+    mov     ecx, eax
+    mov     esi, [ebp + 8] 
+    mov     edi, [ebp + 12]
+    cld
+    rep     movsb
+
+    pop     edi
+    pop     esi
+    pop     ecx
+    pop     eax
+    leave
+
+    ret
+    
+; End strcopy-------------------------------------------------------------
+
+;---------------------------------------------------------------------------
+to_lower:
+;
+; Description: lowers all uppercase characters in a string
+; Recieves: arg1: address of source string
+; Returns: nothing
+; Requires: The string must be null terminated
+; Notes: None
+; Algo: None
+;---------------------------------------------------------------------------
+
+    push    ebp
+    mov     ebp, esp
+    push    eax
+    push    edi
+    push    ecx
+
+    push    dword [ebp + 8]
+    call    strlen
+    mov     ecx, eax
+    dec     ecx
+    mov     edi, [ebp + 8]
+    mov     eax, 0
+
+    .loop:
+    lodsb
+    .if:
+    cmp     al, 65
+    jl      .endif
+    .if2:
+    cmp     al, 90
+    jg      .endif
+
+    or      al, 0010_0000b
+    stosb
+    .endif:
+    inc     edi
+    loop    .loop
+
+    pop     ecx
+    pop     edi
+    pop     eax
+    leave
+
+    ret
+    
+; End to_lower-------------------------------------------------------------
+
+
 
 NL:     equ 0xa
 NULL:   equ 0
