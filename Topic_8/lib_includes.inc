@@ -13,6 +13,10 @@ extern swap_xor
 extern sum
 extern factorial
 extern print_newline
+extern copy_int_array
+extern strcopy
+extern to_lower
+extern to_upper
 
 ; constants
 extern NL
