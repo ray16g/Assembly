@@ -16,6 +16,7 @@ global print_newline
 global copy_int_array
 global strcopy
 global to_lower
+global to_upper
 
 global NL
 global NULL
@@ -36,7 +37,7 @@ strlen:
 
     push    ebp
     mov     ebp, esp
-
+    push    ecx
     push    edi             ; preserve esi
     mov     edi, [ebp + 8]  ; set ESI to the address of the string
     mov     al, 0           ; compare to 0
@@ -48,7 +49,7 @@ strlen:
     sub     eax, ecx
 
     pop     edi
-
+    pop     ecx
     leave
 
     ret
@@ -107,13 +108,14 @@ printstr:
 
     push    eax
 
-    mov     ecx, [ebp + 8]        ; string
-    push    ecx
+    push    dword [ebp + 8]
     call    strlen
     add     esp, 4
+    
+    mov     ecx, [ebp + 8]
     mov     edx, eax        ; length of string
-    mov     eax, 4          ; stdout
-    mov     ebx, 1
+    mov     eax, 4          ; syswrite
+    mov     ebx, 1          ; stdout
     int     0x80            ; int
 
     pop     eax
@@ -578,7 +580,7 @@ copy_int_array:
 ;---------------------------------------------------------------------------
 strcopy:
 ;
-; Description: Calculate the size of a null-terminated string
+; Description: copies source string into destiniation string
 ; Recieves: arg1: address of source string
 ;           arg2: address of destiniation string
 ; Returns: nothing
@@ -627,39 +629,93 @@ to_lower:
     mov     ebp, esp
     push    eax
     push    edi
+    push    esi
     push    ecx
 
     push    dword [ebp + 8]
     call    strlen
     mov     ecx, eax
     dec     ecx
-    mov     edi, [ebp + 8]
+    mov     esi, [ebp + 8]
     mov     eax, 0
+
+    cld
 
     .loop:
     lodsb
-    .if:
+
     cmp     al, 65
     jl      .endif
-    .if2:
     cmp     al, 90
     jg      .endif
-
-    or      al, 0010_0000b
+    
+    or      al, 00100000b 
+    mov     edi, esi
+    dec     edi
     stosb
     .endif:
-    inc     edi
     loop    .loop
 
     pop     ecx
+    pop     esi
+    pop     edi
+    pop     eax
+    leave
+
+    ret
+; End to_lower-------------------------------------------------------------
+
+;---------------------------------------------------------------------------
+to_upper:
+;
+; Description: uppers all lowercase characters in a string
+; Recieves: arg1: address of source string
+; Returns: nothing
+; Requires: The string must be null terminated
+; Notes: None
+; Algo: None
+;---------------------------------------------------------------------------
+
+    push    ebp
+    mov     ebp, esp
+    push    eax
+    push    edi
+    push    esi
+    push    ecx
+
+    push    dword [ebp + 8]
+    call    strlen
+    mov     ecx, eax
+    dec     ecx
+    mov     esi, [ebp + 8]
+    mov     eax, 0
+
+    cld
+
+    .loop:
+    lodsb
+
+    cmp     al, 97
+    jl      .endif
+    cmp     al, 122
+    jg      .endif
+    
+    and      al, 11011111b 
+    mov     edi, esi
+    dec     edi
+    stosb
+    .endif:
+    loop    .loop
+
+    pop     ecx
+    pop     esi
     pop     edi
     pop     eax
     leave
 
     ret
     
-; End to_lower-------------------------------------------------------------
-
+; End to_upper-------------------------------------------------------------
 
 
 NL:     equ 0xa

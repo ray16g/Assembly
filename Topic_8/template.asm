@@ -19,6 +19,11 @@ global      _start
 _start:
 
     push    array
+    call    printstr
+    call    print_newline
+    add     esp,4
+
+    push    array
     call    strlen
     add     esp, 4
 
@@ -27,10 +32,22 @@ _start:
     call    strcopy
     add     esp, 8
 
+    push    resarray
+    call    printstr
+    call    print_newline
+    add     esp,4
+
     push    array
     call    to_lower
+    call    printstr
+    call    print_newline
     add     esp, 4
 
+    push    array
+    call    to_upper
+    call    printstr
+    call    print_newline
+    add     esp, 4
 
 exit:  
     mov     ebx, 0      ; return 0 status on exit - 'No Errors'
@@ -41,5 +58,4 @@ section     .bss
 resarray: resb 8
 
 section     .data
-array: db "teSTIng",0
-len: equ ($ - array)
+array: db "HELLO World!",0
