@@ -17,6 +17,8 @@ global copy_int_array
 global strcopy
 global to_lower
 global to_upper
+global get_char_input
+global printchar
 
 global NL
 global NULL
@@ -719,6 +721,66 @@ to_upper:
     
 ; End to_upper-------------------------------------------------------------
 
+
+;---------------------------------------------------------------------------
+get_char_input:
+;
+; Description: takes input of char
+; Recieves: ARG1: address of the buffer
+; Returns: 
+; Requires: ARG1 to be a char
+; Notes: issues a syscall to take in input
+; Algo: none 
+;---------------------------------------------------------------------------
+
+    push    ebp
+    mov     ebp, esp
+
+    push    ebx 
+
+    mov     ecx, [ebp + 8]        ; buffer
+    mov     edx, 2        ; length of buffer
+    mov     eax, 3          ; stdin
+    mov     ebx, 0
+    int     0x80            ; int
+
+    pop     ebx
+
+    leave
+
+    ret
+; End get_char_input-------------------------------------------------------------
+
+
+;---------------------------------------------------------------------------
+printchar:
+;
+; Description: prints char
+; Recieves: ARG1: address of the char
+; Returns: nothing
+; Requires: ARG1 to be a char
+; Notes: issues a syscall to print the string to console
+; Algo: none 
+;---------------------------------------------------------------------------
+    push    ebp
+    mov     ebp, esp
+
+    push    eax
+    push    ebx
+    
+    mov     ecx, [ebp + 8]
+    mov     edx, 1        ; length of string
+    mov     eax, 4          ; syswrite
+    mov     ebx, 1          ; stdout
+    int     0x80            ; int
+
+    pop     ebx
+    pop     eax
+
+    leave
+
+    ret
+; End printchar-------------------------------------------------------------
 
 NL:     equ 0xa
 NULL:   equ 0

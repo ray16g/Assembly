@@ -17,6 +17,8 @@ extern copy_int_array
 extern strcopy
 extern to_lower
 extern to_upper
+extern get_char_input
+extern printchar
 
 ; constants
 extern NL
