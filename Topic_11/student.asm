@@ -23,7 +23,6 @@ _start:
     mov     ecx, [ebx]
     mov     edi, student_array
 
-    
     .loop:
     push    ecx
     push    edi
@@ -36,7 +35,6 @@ _start:
     loop .loop
 
     ; print students 
-
     mov     ecx, [ebx]
     mov     esi, student_array
     .loop2:

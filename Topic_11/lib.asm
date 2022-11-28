@@ -41,6 +41,7 @@ strlen:
     mov     ebp, esp
     push    ecx
     push    edi             ; preserve esi
+    
     mov     edi, [ebp + 8]  ; set ESI to the address of the string
     mov     al, 0           ; compare to 0
     mov     ecx, 256        ; counter of 255

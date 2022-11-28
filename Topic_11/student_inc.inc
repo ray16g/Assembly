@@ -59,6 +59,7 @@ get_student:
     push    10
     push    edi
     call    get_input
+    add     esp, 12
 
     ; get name
     lea     edi, [ebx + Student.name]
@@ -67,6 +68,7 @@ get_student:
     push    150
     push    edi
     call    get_input
+    add     esp, 12
 
     ; get grade
     lea     edi, [ebx + Student.grade]
@@ -75,6 +77,7 @@ get_student:
     push    edi
     call    get_char_input
     mov     [edi], al
+    add     esp, 8
 
     pop     ebx
     pop     edi             ; restore edi
