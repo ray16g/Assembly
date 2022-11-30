@@ -1,0 +1,73 @@
+CSCI 150 Final Notes
+- Be able to convert decimal signed values into binary and hexadecimal (Be sure to show all bits in the answer)
+    - Very little partial credit
+    - Be able to do addition and subtraction on two decimal values in binary
+    - Answer in binary and hexadecimal
+    - Know two's compliment for signed negative values
+    - Know how the flags are affected (OF, SF, ZF)
+- Know the layout of memory in a running program
+    - Know the name of the 5 sections of memory and what they hold
+        - STACK
+            - Stores temporary variables stored during runtime
+        - HEAP
+            - 
+        - BSS
+            - Store unintialized data
+        - DATA
+            - Stores intialized data
+        - TEXT
+            - Stores instructions for the CPU to execute
+- Know where and what a register is  
+    -
+- Know the instructions to assemble, link, and execute an asm file
+    - nasm -f elf -g [filename]
+    - ld -m elf_i386 -o [outputname] [filenames]
+- Know the three operations of the CPU when running instructions
+    - Name and a brief description
+    - Fetch instruction 
+    - Decode Instruction
+    - Load Instruction
+- Know the four general purpose registers
+    - EAX, EBX, ECX, EDX
+    - Know the common uses of the registers (implicit uses)
+    - Uses of EDI, ESI, ESP, EBP
+- Know how to move a smaller value into a larger registers
+    - movzx
+- Know what a label represents in text/data sections
+    - Label is a constant value with equ
+    - The size of the label is not kept with the label
+    - When dereferencing an address, we can come up with another address with arithmetic (EX: [EBP + 8])
+    - Know the LEA instruction and its use
+- Know the string operations
+    - SCAS, MOVS, LODS, STOS, 
+    - Know what registers are involved in each
+    - Know data sizes of the instructions and what registers are involved
+    - Know repeat instructions
+        - REPZ
+        - REPNZ
+        - REPZ
+- Know multiplication and division
+    - MUL, DIV
+    - Know how to prepare for signed extension
+        -
+        - Three operations to extend into EDX for signed division
+    - Know how EDX is affected for division and multiplication and know to zero out EDX for division
+        - Remainder is put into EDX for division
+        - Quotient is put into EDX for division
+        - Multiplication will extend into EDX if larger than EAX
+- Know the shift operations
+    - Know the involvement of the carry flag in the operations
+    - Know the arithmetic effect of the shift operations
+        - SHL will multiply by two
+        - SHR will integer divide by two
+- Know which registers are preserved by the caller and which are reserved by the callee
+    - Caller: EAX, ECX, EDX
+    - Callee: EBX, EDI, ESI, EBP
+- Know how to write a program with a flow control structure
+    - Could be a if statement, while, do while, switch
+- Know the file operations
+    - Open, close, read, write
+    - Access codes
+
+- 2.5 hour coding exam
+- 7:30 AM 
