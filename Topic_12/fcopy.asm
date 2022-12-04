@@ -31,8 +31,8 @@ _start:
     mov     eax, 5          ; sys_open
     mov     ebx, inputFile  ; enstein_field_eqs
     mov     ecx, 2          ; read and write access mode
-    mov     edx, 0o777      ; syscall
-    int     0x80
+    mov     edx, 0o777      ; set permissions
+    int     0x80            ; syscall
     ; file descriptor is returned on eax
 
     mov     dword [ebp-8], eax  ; inputFile file descriptor
@@ -46,17 +46,16 @@ _start:
     int     0x80
     ; qty of bytes read is returned on eax
 
-    cmp     al, 0
-    jz      .end
+    cmp     al, 0           ; check for end of file
+    jz      .end            ; if end of file, leave loop
 
     mov     edx, eax        ; qty of bytes
     mov     eax, 4          ; sys_write
     mov     ebx, [ebp-4]    ; output file descriptor
     mov     ecx, buffer     ; buffer
-    
-    int     0x80
+    int     0x80            ; syscall
 
-    jmp     .while
+    jmp     .while          ; loop
     .end:
 
 exit:  
@@ -67,6 +66,6 @@ exit:
 section     .bss
 buffer:         resb    4096
 section     .data
-buffersz:       dw  4096
+buffersz:       dw  4096    
 outputFile:     db  "./copy.jpeg",0
 inputFile:      db  "./einstein_field_eqs.jpeg",0
