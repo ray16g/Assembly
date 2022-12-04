@@ -48,11 +48,11 @@ _start:
 
     cmp     al, 0
     jz      .end
-    
-    mov     edx, eax
-    mov     eax, 4
+
+    mov     edx, eax        ; qty of bytes
+    mov     eax, 4          ; sys_write
     mov     ebx, [ebp-4]    ; output file descriptor
-    mov     ecx, buffer
+    mov     ecx, buffer     ; buffer
     
     int     0x80
 
