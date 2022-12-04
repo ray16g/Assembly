@@ -8,9 +8,9 @@ CSCI 150 Final Notes
 - Know the layout of memory in a running program
     - Know the name of the 5 sections of memory and what they hold
         - STACK
-            - Stores temporary variables stored during runtime
+            - Stores local variables, return addresses, and data pushed to the stack stored during runtime
         - HEAP
-            - 
+            - Dynamic storage that is allocated during runtime.
         - BSS
             - Store unintialized data
         - DATA
