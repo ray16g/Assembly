@@ -49,8 +49,10 @@ CSCI 150 Final Notes
 - Know multiplication and division
     - MUL, DIV
     - Know how to prepare for signed extension
-        -
         - Three operations to extend into EDX for signed division
+            - CBW (convert byte to word) extends AL into AH
+            - CWD (convert word to doubleword) extends AX into DX
+            - CDQ (convert doubleword to quadword) extends EAX into EDX
     - Know how EDX is affected for division and multiplication and know to zero out EDX for division
         - Remainder is put into EDX for division
         - Quotient is put into EDX for division
