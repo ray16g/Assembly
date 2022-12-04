@@ -37,17 +37,27 @@ _start:
 
     mov     dword [ebp-8], eax  ; inputFile file descriptor
 
+    .while:
+
     mov     eax, 3          ; sys_read
     mov     ebx, [ebp-8]    ; input file descriptor
     mov     ecx, buffer
     mov     edx, buffersz  
     int     0x80
+    ; qty of bytes read is returned on eax
 
+    cmp     al, 0
+    jz      .end
+    
+    mov     edx, eax
     mov     eax, 4
     mov     ebx, [ebp-4]    ; output file descriptor
     mov     ecx, buffer
-    mov     edx, buffersz
+    
     int     0x80
+
+    jmp     .while
+    .end:
 
 exit:  
     mov     ebx, 0      ; return 0 status on exit - 'No Errors'
@@ -57,6 +67,6 @@ exit:
 section     .bss
 buffer:         resb    4096
 section     .data
-buffersz:       dd 4096
+buffersz:       dw  4096
 outputFile:     db  "./copy.jpeg",0
 inputFile:      db  "./einstein_field_eqs.jpeg",0
